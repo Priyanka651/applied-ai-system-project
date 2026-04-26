@@ -42,7 +42,7 @@ class Recommender:
                 score += 1.0
 
             energy_diff = abs(song.energy - user.target_energy)
-            energy_score = 1 - energy_diff
+            energy_score = max(0, 1 - energy_diff)
             score += energy_score
 
             scored_songs.append((song, score))
@@ -96,6 +96,15 @@ def load_songs(csv_path: str) -> List[Dict]:
     return songs
 
 
+def get_confidence(score: float) -> str:
+    if score >= 3.0:
+        return "High"
+    elif score >= 2.0:
+        return "Medium"
+    else:
+        return "Low"
+
+
 def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     score = 0.0
     reasons = []
@@ -109,7 +118,7 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
         reasons.append("mood match (+1.0)")
 
     energy_diff = abs(song["energy"] - user_prefs["energy"])
-    energy_score = 1 - energy_diff
+    energy_score = max(0, 1 - energy_diff)
     score += energy_score
     reasons.append(f"energy similarity (+{energy_score:.2f})")
 
@@ -118,13 +127,20 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
 
 def recommend_songs(
     user_prefs: Dict, songs: List[Dict], k: int = 5
-) -> List[Tuple[Dict, float, str]]:
+) -> List[Tuple[Dict, float, str, str]]:
+    if not songs:
+        return []
+
+    if k <= 0:
+        return []
+
     results = []
 
     for song in songs:
         score, reasons = score_song(user_prefs, song)
-        explanation = ", ".join(reasons)
-        results.append((song, score, explanation))
+        explanation = " & ".join(reasons)
+        confidence = get_confidence(score)
+        results.append((song, score, explanation, confidence))
 
     results.sort(key=lambda x: x[1], reverse=True)
     return results[:k]

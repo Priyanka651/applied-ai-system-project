@@ -1,193 +1,239 @@
-# 🎵 Music Recommender Simulation
+# 🎧 Applied AI Music Recommender System
 
 ## Project Summary
 
-In this project you will build and explain a small music recommender system.
+This project extends my earlier **Music Recommender Simulation** into a more complete applied AI system.
 
-Your goal is to:
+The system takes user preferences such as genre, mood, and energy level, then recommends songs from a dataset using weighted scoring logic. It also explains each recommendation, applies guardrails for invalid inputs, and includes reliability testing to evaluate system behavior across normal and edge-case scenarios.
 
-- Represent songs and a user "taste profile" as data
-- Design a scoring rule that turns that data into recommendations
-- Evaluate what your system gets right and wrong
-- Reflect on how this mirrors real world AI recommenders
-
-Replace this paragraph with your own summary of what your version does.
+This project demonstrates how a simple recommendation algorithm can be improved to become more transparent, safe, and trustworthy.
 
 ---
-This project implements a simple content-based music recommender system. It suggests songs based on a user's preferences such as genre, mood, and energy level.
 
-The system computes a weighted score for each song by comparing its features with the user’s taste profile, and then ranks songs to generate personalized recommendations.
+## Base Project
 
-The goal of this project is to understand how real-world platforms like Spotify or YouTube recommend music by transforming data into meaningful predictions using scoring and ranking logic.
+This project is based on my earlier **Music Recommender Simulation** from a previous module.
 
-## How The System Works
+The original version used a simple content-based scoring system to recommend songs based on features like genre, mood, and energy. It could rank songs and generate basic explanations, but it did not yet include interactive user input, confidence labels, guardrails, or structured reliability testing.
 
-This recommender system suggests songs by comparing song features with a user's preferences and assigning a score to each song.
+---
 
-### Song Features
+## What Changed in the Final Version
 
-Each song includes the following key attributes:
+In this final version, I extended the original recommender into a more complete applied AI system by adding:
 
-- Genre (e.g., pop, rock, lofi)
-- Mood (e.g., happy, chill, intense)
-- Energy (a value between 0 and 1 representing how energetic the song is)
+- Interactive CLI input for user preferences
+- Guardrails for invalid energy, empty genre, and empty mood
+- Confidence labels for each recommendation
+- More structured explanation output
+- Reliability testing across multiple profiles
+- Stronger automated unit tests
+- A clearer architecture and evaluation process
 
-### User Profile
+---
 
-The user profile represents the user's music preferences.
+## Chosen AI Feature
 
-It includes:
+### Reliability and Testing System
 
-- Preferred genre
-- Preferred mood
-- Target energy level
+The main applied AI feature in this project is a **reliability and testing system**.
 
-Example:
+This feature is fully integrated into the application because the recommender is not only generating outputs, but also checking whether it behaves safely and consistently across multiple user profiles. This improves trustworthiness and makes it easier to understand where the system performs well and where it struggles.
 
-user_prefs = {
-  "genre": "pop",
-  "mood": "happy",
-  "energy": 0.8
-}
+---
 
-### Scoring Logic
+## Setup Instructions
 
-Each song is compared with the user profile and assigned a score based on:
-
-- +2.0 points if the song’s genre matches the user’s preferred genre
-- +1.0 point if the song’s mood matches the user’s preferred mood
-- Additional score based on how close the song’s energy is to the user’s target energy
-
-The closer the song matches the user's preferences, the higher the score.
-
-### Ranking and Recommendation
-
-After scoring all songs:
-
-- Songs are sorted from highest score to lowest
-- The top 3–5 songs are selected as recommendations
-
-This ensures that the most relevant songs appear at the top of the list.
-
-### Potential Bias
-
-This system may introduce bias because it gives more importance to features like genre and energy.
-
-For example:
-
-- It may over-prioritize songs from the same genre
-- It may ignore songs with similar mood but different genre
-- It may repeatedly recommend similar types of songs, reducing diversity
-
-This demonstrates how simple recommendation systems can create filter bubbles.
-
-## CLI Output Screenshot
-Below is a sample terminal output showing the top recommendations, their scores, and the reasons for each recommendation.
-![alt text](image.png)
-
-
-## Test Results
-All tests passed successfully.
-![alt text](image-1.png)
-
-
-
-## Evaluation - Multiple Profiles
-I tested the recommender system using different user profiles:
-
-- High Energy Pop
-- Chill Lofi
-- Intense Rock
-- Edge Case (High energy + sad mood)
-
-Each profile produced different recommendations based on user preferences.
-
-![alt text](image-2.png)
-![alt text](image-3.png)
-![alt text](image-4.png)
-
-
-## Final Output
-The system recommends the top 3–5 songs that best match the user's taste.
-
-
-## Getting Started
-### Setup
-
-1. Create a virtual environment (optional but recommended):
-
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate      # Mac or Linux
-   .venv\Scripts\activate         # Windows
-
-   ```
-
-2. Install dependencies
+1. Clone the repository:
 
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/Priyanka651/applied-ai-system-project.git
+cd applied-ai-system-project
 ```
-
-3. Run the app:
-
+2. Run the application:
 ```bash
 python -m src.main
 ```
 
-### Running Tests
-
-Run the starter tests with:
-
+3.Run the tests:
 ```bash
-pytest
+python -m pytest
 ```
 
-You can add more tests in `tests/test_recommender.py`.
+## How the System Works
+The recommender system compares user preferences with song features in the dataset and assigns a score to each song.
 
----
+### Input Features
+Each song includes:
 
-## Experiments You Tried
+- genre
+- mood
+- energy
+- tempo_bpm
+- valence
+- danceability
+- acousticness
 
-Use this section to document the experiments you ran. For example:
+### User Preferences
+The user provides:
 
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+preferred genre
+preferred mood
+target energy level
 
----
+### Scoring Logic
+Each song is scored using the following rules:
 
-I experimented with different feature combinations and weights.
++2.0 points for a genre match
++1.0 point for a mood match
+additional score based on how close the song’s energy is to the user’s target energy
 
-- When I increased the weight of genre, the recommendations became more consistent but less diverse.
-- When I focused only on energy and valence, the system captured the "vibe" well but sometimes ignored important differences like rhythm.
-- Adding danceability improved recommendations for energetic songs.
+After scoring all songs:
 
-## These experiments helped me understand how different features affect the final recommendations.
+songs are sorted from highest to lowest score
+the top recommendations are returned
+each recommendation includes an explanation and a confidence label
 
-## Limitations and Risks
+## System Architecture
 
-Summarize some limitations of your recommender.
+The system takes user input, validates it, loads the song dataset, scores each song, ranks the songs, and generates explanations with confidence labels.
 
-Examples:
+A reliability testing module then checks how the system behaves across different profiles, including normal and edge-case inputs.
+![System Architecture](assets/system-architecture.png)
 
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
+## Sample Interactions
+Example 1: High Energy Pop
 
-You will go deeper on this in your model card.
+Input
 
----
+genre = pop
+mood = happy
+energy = 0.8
 
-## Reflection
+Output
 
-This project helped me understand how recommendation systems convert user preferences into predictions using simple scoring logic.
+Sunrise City - Score: 3.98 - Confidence: High
+Because: genre match (+2.0) & mood match (+1.0) & energy similarity (+0.98)
+Gym Hero - Score: 2.87 - Confidence: Medium
+Because: genre match (+2.0) & energy similarity (+0.87)
 
-I learned that even a basic algorithm can produce meaningful recommendations, but it can also introduce bias depending on how features are weighted.
+Example 2: Chill Lofi
 
-One surprising observation was how small changes in weights significantly affected the results.
+Input
 
-This project also helped me understand how real-world platforms like Spotify use similar concepts but at a much larger and more complex scale.
+genre = lofi
+mood = chill
+energy = 0.3
+
+Expected Behavior
+
+the recommender should favor chill and low-energy lofi tracks
+songs like Library Rain and Midnight Coding should rank highly
+
+Example 3: Invalid Energy Input
+
+Input
+
+genre = pop
+mood = happy
+energy = 7
+
+System Behavior
+
+the system does not crash
+it shows a warning
+it resets energy to 0.5 and continues safely
+
+This demonstrates the project’s guardrail behavior.
+
+## Reliability and Evaluation
+The system was tested using multiple profiles, including:
+
+High Energy Pop
+Chill Lofi
+Intense Rock
+Edge Case (High Energy + Sad)
+
+### Reliability Results
+All 4 profile-based reliability checks passed
+The recommender returned valid recommendations in each case
+It produced explanations for the outputs
+It handled invalid user input safely using validation rules
+
+### Automated Test Results
+
+The project also includes automated unit tests for:
+
+score generation
+explanation generation
+sorting and top-k behavior
+invalid k handling
+empty song list handling
+confidence label behavior
+
+Current test status: 9 out of 9 tests passed.
+
+## Design Decisions
+I used a weighted scoring system where genre has the highest importance, followed by mood and energy similarity.
+
+This approach makes the recommender simple, explainable, and easy to debug. However, it also creates trade-offs:
+
+genre can dominate the final ranking
+recommendations may become less diverse
+conflicting preferences are harder to handle well
+
+I chose this design because it keeps the system transparent while still producing meaningful outputs.
+
+## Reflection and Ethics
+
+### Limitations and Biases
+
+The system is biased toward genre and energy because these features have the strongest influence in the scoring logic. This means it may repeatedly recommend similar songs and reduce diversity.
+
+The dataset is also small, which limits variety and may over-represent certain styles.
+
+- Potential Misuse
+
+This system could be misused if users treat automated recommendations as perfect or complete. In reality, the recommender only captures a few structured song features and does not understand lyrics, personal memories, or cultural context.
+
+A future improvement would be to add diversity controls so users are not trapped in a narrow recommendation loop.
+
+- Surprising Observations
+
+One surprising result was how strongly the scoring weights changed the recommendations. Even small changes in feature importance could noticeably shift the ranking.
+
+The system also performed less intuitively on conflicting profiles, such as high-energy but sad preferences.
+
+### AI Collaboration
+
+AI tools were helpful for brainstorming scoring logic, improving explanations, and structuring parts of the code.
+
+One helpful suggestion was using modular scoring and testing functions to keep the recommender easier to evaluate.
+
+One flawed suggestion was code that did not fully handle edge cases or input validation, which had to be corrected manually. This reminded me that AI-generated code still needs careful human review.
 
 
+## Screenshots
 
+### 🎧 System Output (Recommendations + Confidence + Testing)
+![System Output](assets/output.png)
+
+### 🧪 Automated Test Results (Pytest)
+![Test Results](assets/tests.png)
+
+### ⚠️ Invalid Input Handling (Guardrails)
+![Invalid Input](assets/invalid-input.png)
+
+## Demo / Walkthrough
+
+Watch the demo here:
+
+[Demo Video Link](https://drive.google.com/file/d/1O8_Mod-J25j_vEmuvaRIJSABVTK5Vxwn/view?usp=sharing)
+
+
+## Final Reflection
+This project helped me understand that even a simple recommendation system can feel intelligent when it transforms structured data into ranked outputs.
+
+It also taught me that building an AI system is not only about generating results, but also about making those results explainable, testable, and safe.
+
+This project reflects my growth in thinking beyond basic code implementation and toward building more trustworthy AI systems.
